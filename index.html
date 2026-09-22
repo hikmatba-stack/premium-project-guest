@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Absensi Tamu | Premium Project</title>
+
+    <meta name="description" content="Digital Guest Attendance - Premium Project">
+    <meta name="theme-color" content="#17352a">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --green: #17352a;
+            --green-light: #244d3d;
+            --gold: #c6a15b;
+            --gold-light: #e2c98d;
+            --cream: #f8f5ed;
+            --white: #ffffff;
+            --text: #243129;
+            --muted: #7c817c;
+            --border: rgba(198, 161, 91, 0.35);
+            --shadow: 0 25px 70px rgba(25, 40, 32, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 20%, rgba(198,161,91,.12), transparent 25%),
+                radial-gradient(circle at 85% 75%, rgba(23,53,42,.10), transparent 30%),
+                var(--cream);
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND DECORATION */
+
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circle-1 {
+            width: 420px;
+            height: 420px;
+            top: -180px;
+            right: -140px;
+            border: 1px solid rgba(198,161,91,.25);
+        }
+
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -140px;
+            left: -100px;
+            background: rgba(23,53,42,.035);
+        }
+
+        /* MAIN */
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 35px 20px 45px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1180px;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-symbol {
+            width: 45px;
+            height: 45px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            position: relative;
+        }
+
+        .brand-symbol::before,
+        .brand-symbol::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .brand-symbol::before {
+            top: 8px;
+        }
+
+        .brand-symbol::after {
+            bottom: 8px;
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: var(--green);
+        }
+
+        .brand-sub {
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-top: 3px;
+        }
+
+        .datetime {
+            text-align: right;
+        }
+
+        .date {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--green);
+        }
+
+        .time {
+            margin-top: 4px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* HERO */
+
+        .hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,255,255,.96),
+                    rgba(249,246,237,.94)
+                );
+            border: 1px solid rgba(198,161,91,.25);
+            border-radius: 32px;
+            box-shadow: var(--shadow);
+            padding: 65px 70px 55px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border: 1px solid rgba(198,161,91,.15);
+            border-radius: 50%;
+            top: -180px;
+            left: -120px;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border: 1px solid rgba(23,53,42,.07);
+            border-radius: 50%;
+            bottom: -250px;
+            right: -150px;
+        }
+
+        .eyebrow {
+            position: relative;
+            z-index: 1;
+            color: var(--gold);
+            letter-spacing: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(55px, 8vw, 92px);
+            line-height: .9;
+            font-weight: 600;
+            color: var(--green);
+            margin: 18px 0 15px;
+        }
+
+        .title span {
+            color: var(--gold);
+        }
+
+        .subtitle {
+            position: relative;
+            z-index: 1;
+            max-width: 620px;
+            margin: auto;
+            color: #69716b;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 22px 0 32px;
+        }
+
+        .ornament-line {
+            width: 70px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold));
+        }
+
+        .ornament-line:last-child {
+            background: linear-gradient(to left, transparent, var(--gold));
+        }
+
+        .ornament-dot {
+            width: 7px;
+            height: 7px;
+            border: 1px solid var(--gold);
+            transform: rotate(45deg);
+        }
+
+        /* SEARCH */
+
+        .search-area {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-label {
+            display: block;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: var(--green);
+            text-transform: uppercase;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid rgba(198,161,91,.35);
+            border-radius: 18px;
+            padding: 6px;
+            box-shadow: 0 12px 35px rgba(23,53,42,.08);
+        }
+
+        .search-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: #a5aaa5;
+        }
+
+        .search-btn {
+            border: 0;
+            cursor: pointer;
+            padding: 15px 28px;
+            border-radius: 13px;
+            background: var(--green);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: .25s ease;
+        }
+
+        .search-btn:hover {
+            background: var(--green-light);
+            transform: translateY(-1px);
+        }
+
+        /* GUEST RESULT */
+
+        .guest-result {
+            display: none;
+            margin: 25px auto 0;
+            max-width: 700px;
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(23,53,42,.05);
+            border: 1px solid rgba(23,53,42,.10);
+            text-align: left;
+        }
+
+        .guest-result.active {
+            display: block;
+            animation: fadeUp .35s ease;
+        }
+
+        .guest-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .guest-info {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* ACTIONS */
+
+        .actions {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            max-width: 850px;
+            margin: 35px auto 0;
+        }
+
+        .action-card {
+            position: relative;
+            min-height: 220px;
+            padding: 35px;
+            border-radius: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: .3s ease;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(23,53,42,.15);
+        }
+
+        .checkin {
+            color: white;
+            background:
+                radial-gradient(circle at 80% 15%, rgba(198,161,91,.2), transparent 30%),
+                var(--green);
+            border: 1px solid rgba(198,161,91,.6);
+        }
+
+        .checkout {
+            color: var(--green);
+            background: rgba(255,255,255,.8);
+            border: 1px solid rgba(198,161,91,.55);
+        }
+
+        .action-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .checkin .action-icon {
+            border: 1px solid var(--gold);
+            background: rgba(255,255,255,.08);
+        }
+
+        .checkout .action-icon {
+            background: var(--gold);
+            color: white;
+        }
+
+        .action-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 34px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .action-subtitle {
+            margin-top: 5px;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: .7;
+        }
+
+        .action-description {
+            margin-top: 16px;
+            font-size: 12px;
+            line-height: 1.6;
+            opacity: .75;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            margin-top: 28px;
+            padding: 30px;
+            border-radius: 22px;
+            background: var(--green);
+            color: white;
+            text-align: center;
+        }
+
+        .footer-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-style: italic;
+            color: #f1eadc;
+        }
+
+        .footer-line {
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+            margin: 15px auto;
+        }
+
+        .footer-brand {
+            color: var(--gold-light);
+            font-size: 10px;
+            letter-spacing: 4px;
+            font-weight: 600;
+        }
+
+        /* MODAL */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11,25,19,.65);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            animation: fadeIn .25s ease;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 440px;
+            background: var(--cream);
+            border-radius: 25px;
+            padding: 38px;
+            text-align: center;
+            box-shadow: 0 30px 90px rgba(0,0,0,.25);
+            animation: scaleIn .3s ease;
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: var(--green);
+            color: var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .modal h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            color: var(--green);
+        }
+
+        .modal p {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            border: 0;
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .cancel-btn {
+            background: #e8e4da;
+            color: var(--text);
+        }
+
+        .confirm-btn {
+            background: var(--green);
+            color: white;
+        }
+
+        /* SUCCESS */
+
+        .success {
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+            animation: fadeUp .35s ease;
+        }
+
+        .success-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #e5eee8;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+        }
+
+        .success h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            color: var(--green);
+        }
+
+        .success p {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* ANIMATIONS */
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 760px) {
+
+            .page {
+                padding: 18px 12px 25px;
+            }
+
+            .topbar {
+                margin-bottom: 18px;
+            }
+
+            .brand-name {
+                font-size: 11px;
+                letter-spacing: 2.5px;
+            }
+
+            .brand-sub {
+                font-size: 7px;
+                letter-spacing: 2px;
+            }
+
+            .brand-symbol {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+
+            .date {
+                font-size: 10px;
+            }
+
+            .time {
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 45px 18px 28px;
+                border-radius: 25px;
+            }
+
+            .eyebrow {
+                font-size: 8px;
+                letter-spacing: 3px;
+            }
+
+            .title {
+                font-size: 58px;
+            }
+
+            .subtitle {
+                font-size: 12px;
+            }
+
+            .search-box {
+                border-radius: 14px;
+            }
+
+            .search-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .search-btn {
+                padding: 13px 18px;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                margin-top: 22px;
+            }
+
+            .action-card {
+                min-height: 190px;
+                padding: 28px 20px;
+            }
+
+            .action-title {
+                font-size: 31px;
+            }
+
+            .footer {
+                padding: 25px 15px;
+            }
+
+            .footer-quote {
+                font-size: 18px;
+            }
+
+            .modal {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-circle circle-1"></div>
+    <div class="bg-circle circle-2"></div>
+
+    <main class="page">
+
+        <div class="container">
+
+            <!-- TOP BAR -->
+            <header class="topbar">
+
+                <div class="brand">
+
+                    <div class="brand-symbol">
+                        PP
+                    </div>
+
+                    <div>
+                        <div class="brand-name">
+                            PREMIUM PROJECT
+                        </div>
+
+                        <div class="brand-sub">
+                            WEDDING ORGANIZER
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="datetime">
+
+                    <div class="date" id="currentDate">
+                        Memuat tanggal...
+                    </div>
+
+                    <div class="time" id="currentTime">
+                        00:00:00 WIB
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- MAIN CARD -->
+            <section class="hero">
+
+                <div class="eyebrow">
+                    WELCOME OUR SPECIAL GUEST
+                </div>
+
+                <h1 class="title">
+                    Absensi <span>Tamu</span>
+                </h1>
+
+                <p class="subtitle">
+                    Selamat datang. Silakan cari nama Anda
+                    untuk melakukan pencatatan kehadiran.
+                </p>
+
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-dot"></div>
+                    <div class="ornament-line"></div>
+                </div>
+
+
+                <!-- SEARCH -->
+                <div class="search-area">
+
+                    <label class="search-label">
+                        Cari Nama Tamu
+                    </label>
+
+                    <div class="search-box">
+
+                        <div class="search-icon">
+                            ⌕
+                        </div>
+
+                        <input
+                            type="text"
+                            id="guestSearch"
+                            placeholder="Masukkan nama tamu..."
+                            autocomplete="off"
+                        >
+
+                        <button
+                            class="search-btn"
+                            onclick="searchGuest()">
+                            CARI
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESULT -->
+                <div
+                    class="guest-result"
+                    id="guestResult">
+
+                    <div
+                        class="guest-name"
+                        id="guestName">
+                    </div>
+
+                    <div
+                        class="guest-info"
+                        id="guestInfo">
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION BUTTONS -->
+                <div class="actions">
+
+                    <div
+                        class="action-card checkin"
+                        onclick="openAttendance('CHECK IN')">
+
+                        <div class="action-icon">
+                            ➜
+                        </div>
+
+                        <div class="action-title">
+                            CHECK IN
+                        </div>
+
+                        <div class="action-subtitle">
+                            TAMU MASUK
+                        </div>
+
+                        <div class="action-description">
+                            Klik untuk mencatat kehadiran
+                            saat memasuki acara.
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="action-card checkout"
+                        onclick="openAttendance('CHECK OUT')">
+
+                        <div class="action-icon">
+                            ➜
+                        </div>
+
+                        <div class="action-title">
+                            CHECK OUT
+                        </div>
+
+                        <div class="action-subtitle">
+                            TAMU KELUAR
+                        </div>
+
+                        <div class="action-description">
+                            Klik untuk mencatat waktu
+                            saat meninggalkan acara.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+            <footer class="footer">
+
+                <div class="footer-quote">
+                    "Kehadiran Anda melengkapi
+                    kebahagiaan kami."
+                </div>
+
+                <div class="footer-line"></div>
+
+                <div class="footer-brand">
+                    PREMIUM PROJECT
+                </div>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+
+    <!-- MODAL -->
+    <div
+        class="modal-overlay"
+        id="modalOverlay">
+
+        <div class="modal">
+
+            <div id="confirmContent">
+
+                <div class="modal-icon">
+                    ✓
+                </div>
+
+                <h2 id="modalTitle">
+                    Konfirmasi
+                </h2>
+
+                <p id="modalText">
+                    Apakah Anda yakin ingin melakukan
+                    absensi?
+                </p>
+
+                <div class="modal-actions">
+
+                    <button
+                        class="modal-btn cancel-btn"
+                        onclick="closeModal()">
+                        BATAL
+                    </button>
+
+                    <button
+                        class="modal-btn confirm-btn"
+                        onclick="confirmAttendance()">
+                        KONFIRMASI
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUCCESS -->
+            <div
+                class="success"
+                id="successContent">
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+                <h2>
+                    Berhasil
+                </h2>
+
+                <p id="successText">
+                    Absensi berhasil dicatat.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* =========================================
+           DATA DEMO
+           NANTI AKAN DIGANTI GOOGLE SHEETS
+        ========================================= */
+
+        const guests = [
+            {
+                name: "Budi Santoso",
+                invitation: 2
+            },
+            {
+                name: "Andi Wijaya",
+                invitation: 1
+            },
+            {
+                name: "Siti Aminah",
+                invitation: 2
+            },
+            {
+                name: "Hikmat Bakhtiar",
+                invitation: 2
+            },
+            {
+                name: "Kristi Dwi Lestari",
+                invitation: 2
+            }
+        ];
+
+
+        let selectedGuest = null;
+        let selectedAction = null;
+
+
+        /* =========================================
+           DATE & TIME REALTIME
+        ========================================= */
+
+        function updateDateTime() {
+
+            const now = new Date();
+
+            const dateText =
+                now.toLocaleDateString(
+                    "id-ID",
+                    {
+                        weekday: "long",
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+            const timeText =
+                now.toLocaleTimeString(
+                    "id-ID",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false
+                    }
+                );
+
+            document.getElementById("currentDate")
+                .textContent = dateText;
+
+            document.getElementById("currentTime")
+                .textContent = timeText + " WIB";
+        }
+
+        updateDateTime();
+
+        setInterval(
+            updateDateTime,
+            1000
+        );
+
+
+        /* =========================================
+           SEARCH TAMU
+        ========================================= */
+
+        function searchGuest() {
+
+            const input =
+                document
+                .getElementById("guestSearch")
+                .value
+                .trim()
+                .toLowerCase();
+
+            const result =
+                document
+                .getElementById("guestResult");
+
+            if (!input) {
+
+                result.classList.remove("active");
+
+                alert("Silakan masukkan nama tamu.");
+
+                return;
+            }
+
+
+            const found =
+                guests.find(
+                    guest =>
+                        guest.name
+                        .toLowerCase()
+                        .includes(input)
+                );
+
+
+            if (!found) {
+
+                result.classList.remove("active");
+
+                alert(
+                    "Nama tamu tidak ditemukan."
+                );
+
+                selectedGuest = null;
+
+                return;
+            }
+
+
+            selectedGuest = found;
+
+
+            document.getElementById("guestName")
+                .textContent = found.name;
+
+
+            document.getElementById("guestInfo")
+                .textContent =
+                "Jumlah undangan: " +
+                found.invitation +
+                " orang";
+
+
+            result.classList.add("active");
+        }
+
+
+        /* =========================================
+           ENTER UNTUK SEARCH
+        ========================================= */
+
+        document
+            .getElementById("guestSearch")
+            .addEventListener(
+                "keypress",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        searchGuest();
+
+                    }
+
+                }
+            );
+
+
+        /* =========================================
+           OPEN ATTENDANCE
+        ========================================= */
+
+        function openAttendance(action) {
+
+            if (!selectedGuest) {
+
+                alert(
+                    "Silakan cari nama tamu terlebih dahulu."
+                );
+
+                return;
+            }
+
+
+            selectedAction = action;
+
+
+            document.getElementById("modalTitle")
+                .textContent =
+                action === "CHECK IN"
+                ? "Check In Tamu"
+                : "Check Out Tamu";
+
+
+            document.getElementById("modalText")
+                .textContent =
+                "Konfirmasi " +
+                action +
+                " untuk " +
+                selectedGuest.name +
+                "?";
+
+
+            document.getElementById("confirmContent")
+                .style.display = "block";
+
+            document.getElementById("successContent")
+                .classList.remove("show");
+
+
+            document
+                .getElementById("modalOverlay")
+                .classList.add("show");
+        }
+
+
+        /* =========================================
+           CONFIRM
+        ========================================= */
+
+        function confirmAttendance() {
+
+            const now = new Date();
+
+            const time =
+                now.toLocaleTimeString(
+                    "id-ID",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false
+                    }
+                );
+
+
+            document.getElementById("confirmContent")
+                .style.display = "none";
+
+
+            const success =
+                document.getElementById("successContent");
+
+            success.classList.add("show");
+
+
+            document.getElementById("successText")
+                .textContent =
+                selectedGuest.name +
+                " berhasil melakukan " +
+                selectedAction +
+                " pada pukul " +
+                time +
+                " WIB.";
+
+
+            /*
+                NANTI DI SINI KITA SAMBUNGKAN
+                KE GOOGLE APPS SCRIPT
+
+                Contoh:
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        nama: selectedGuest.name,
+                        aksi: selectedAction,
+                        waktu: new Date().toISOString()
+                    })
+                });
+
+            */
+
+
+            setTimeout(
+                closeModal,
+                2500
+            );
+        }
+
+
+        /* =========================================
+           CLOSE MODAL
+        ========================================= */
+
+        function closeModal() {
+
+            document
+                .getElementById("modalOverlay")
+                .classList.remove("show");
+
+            document.getElementById("confirmContent")
+                .style.display = "block";
+
+            document.getElementById("successContent")
+                .classList.remove("show");
+        }
+
+    </script>
+
+</body>
+</html>
